@@ -72,9 +72,14 @@ def execute_code(code: str, dataframes: dict[str, pd.DataFrame]) -> ExecutionRes
     except Exception as e:
         return ExecutionResult(success=False, error=f"{type(e).__name__}: {e}")
 
-    # Extract results (use explicit None checks to avoid Series truthiness issues)
-    figure = namespace.get("fig") or namespace.get("figure")
-    result = namespace.get("result") or namespace.get("answer")
+    # Extract results (explicit None checks to avoid Series truthiness issues)
+    figure = namespace.get("fig")
+    if figure is None:
+        figure = namespace.get("figure")
+
+    result = namespace.get("result")
+    if result is None:
+        result = namespace.get("answer")
 
     result_df = None
     if isinstance(result, pd.DataFrame):
